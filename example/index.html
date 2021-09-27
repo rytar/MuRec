@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>example</title>
+    <script src="../src/MuRec.js"></script>
+</head>
+<body>
+    <button id="record" style="width: 240px; height: 80px; font-size: xx-large;">record</button>
+    <div id="result"></div>
+    <script>
+        const button = document.getElementById("record");
+        const result = document.getElementById("result");
+        const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+        const murec = new MuRec();
+        button.addEventListener('click', async () => {
+            button.disabled = true;
+            let waiting = '認識中';
+            let i = 0;
+            murec.recognize().then(retData => {
+                button.disabled = false;
+                result.textContent = '再生中の楽曲: ' + retData.data[0].attributes.name;
+            });
+            while(button.disabled) {
+                result.textContent = waiting + '.'.repeat(i % 4);
+                i++;
+                await wait(500);
+            }
+        });
+    </script>
+</body>
+</html>
